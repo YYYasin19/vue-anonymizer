@@ -6,7 +6,7 @@
         <FileUploader></FileUploader>
       </b-step-item>
       <b-step-item step="2" label="Select parameters" icon="tune">
-        Things are here
+        <SettingsPanel></SettingsPanel>
       </b-step-item>
       <b-step-item step="3" label="Review results" icon="image-area-close">
         Other things too
@@ -21,11 +21,13 @@
 <script>
 // @ is an alias to /src
 import FileUploader from "../components/FileUploader.vue";
+import SettingsPanel from "../components/SettingsPanel.vue";
 
 export default {
   name: "Home",
   components: {
-    FileUploader
+    FileUploader,
+    SettingsPanel
   },
   data() {
     return {
