@@ -1,11 +1,12 @@
 <template>
   <div>
-    <b-field>
+    <b-field class="is-primary">
       <b-upload v-model="dropFiles" multiple drag-drop>
-        <section class="section">
-          <div class="content has-text-centered">
+        <section class="section is-primary">
+          <div class="content has-text-centered is-primary">
             <p>
-              <b-icon icon="upload" size="is-large"> </b-icon>
+              <b-icon icon="upload" size="is-large" class="is-primary">
+              </b-icon>
             </p>
             <p>Drop your files here or click to upload</p>
           </div>
@@ -63,14 +64,18 @@ export default {
 }
 
 .image-area {
-  transition: 1s ease-in-out;
   &:hover {
     .image-tag {
-      display: block;
+      opacity: 1;
     }
   }
 }
 .image-tag {
-  display: none;
+  opacity: 0;
+  transition: 0.2s ease-in-out;
+  /* adds this button to the top left corner*/
+  position: absolute;
+  left: 2vw;
+  top: 2vw;
 }
 </style>

@@ -9,6 +9,16 @@
 </template>
 
 <style lang="scss">
+@import "node_modules/bulma/sass/utilities/_all.sass";
+
+$primary: $blue;
+$primary-light: findLightColor($primary);
+$primary-dark: findDarkColor($primary);
+$primary-invert: findColorInvert($primary);
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
