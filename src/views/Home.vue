@@ -1,7 +1,19 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
-    <FileUploader></FileUploader>
+    <div class="container">
+      <div class="columns">
+        <div class="column is-three-quarters">
+          <FileUploader class="box"></FileUploader>
+        </div>
+        <div class="column">
+          <div class="box">
+            <div class="text">Here is the other column</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!--
 <FileUploader></FileUploader>
     -->
@@ -18,9 +30,7 @@ export default {
     FileUploader
   },
   data() {
-    return {
-      activeStep: 0
-    };
+    return {};
   },
   computed: {}
 };
