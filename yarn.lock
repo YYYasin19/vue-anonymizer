@@ -3216,6 +3216,11 @@ dotenv@^8.2.0:
   resolved "https://registry.npm.taobao.org/dotenv/download/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha1-l+YZJZradQ7qPk6j4mvO6lQksWo=
 
+download.js@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/download.js/-/download.js-1.0.0.tgz#850536e3dd9e811d00d4992dc12952101e3fab36"
+  integrity sha512-iBKyLmMkSrrNPfQaJJPcas0nufK1aBH+6fFZP9dAAaGvYywOHH11ZfVCHvHa1aQfHjZ3tjD09APUQ6JAq38+ow==
+
 duplexer@^0.1.1:
   version "0.1.2"
   resolved "https://registry.npm.taobao.org/duplexer/download/duplexer-0.1.2.tgz#3abe43aef3835f8ae077d136ddce0f276b0400e6"

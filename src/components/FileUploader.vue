@@ -1,5 +1,8 @@
 <template>
   <div>
+    <b-button type="is-primary m-3" @click="sendFiles()">
+      Test sending files
+    </b-button>
     <b-field class="is-primary">
       <b-upload v-model="dropFiles" multiple drag-drop>
         <section class="section is-primary">
@@ -36,6 +39,7 @@
 </template>
 
 <script>
+// let downloadjs = require("download.js");
 export default {
   data() {
     return {
@@ -53,6 +57,28 @@ export default {
     },
     removeFile(index) {
       this.dropFiles.pop(index);
+    },
+    sendFiles() {
+      let fd = new FormData();
+      fd.append("file", this.dropFiles[0]);
+
+      fetch("http://127.0.0.1:5000/transform", {
+        method: "POST",
+        headers: {
+          Origin: ""
+        },
+        body: fd
+      })
+        .then(response => {
+          console.log(response);
+          return response.blob();
+        })
+        .then(data => {
+          console.log(data);
+          this.dropFiles.push(data);
+          // downloadjs.downloadBlob("", data);
+        })
+        .catch(error => console.log(error));
     }
   }
 };
