@@ -62,7 +62,7 @@ export default {
           fileurl: URL.createObjectURL(file),
           file: file,
           name: file.name,
-          loading: true
+          loading: false
         });
       });
     },
