@@ -4,7 +4,7 @@
       Test sending files
     </b-button>
     <b-field class="is-primary">
-      <b-upload v-model="dropFiles" multiple drag-drop>
+      <b-upload multiple drag-drop @input="newFiles" native>
         <section class="section is-primary">
           <div class="content has-text-centered is-primary">
             <p>
@@ -18,18 +18,21 @@
     </b-field>
     <div class="columns is-multiline">
       <div class="column is-one-quarter-desktop">
-        <div v-for="file in createUrls()" :key="file" class="">
+        <div v-for="(image, index) in images" :key="index" class="">
           <div class="card m-2">
             <div class="card-image">
-              <img :src="file" class="uploaded-images image" alt="" />
+              <img :src="image.fileurl" class="uploaded-images image" alt="" />
             </div>
             <div class="card-content is-overlay is-clipped image-area">
               <b-button
                 type="is-danger"
                 class="image-tag"
                 icon-right="delete"
-                @click="removeFile(0)"
+                @click="removeFile(index)"
               />
+            </div>
+            <div class="card-footer">
+              {{ image.name }}
             </div>
           </div>
         </div>
@@ -43,20 +46,32 @@
 export default {
   data() {
     return {
-      dropFiles: []
+      dropFiles: [],
+      images: []
     };
   },
   methods: {
+    newFiles(files) {
+      files.forEach(file => {
+        this.images.push({
+          fileurl: URL.createObjectURL(file),
+          name: file.name
+        });
+      });
+    },
     createUrls() {
       let urls = [];
       this.dropFiles.forEach(file => {
-        urls.push(URL.createObjectURL(file));
+        urls.push({
+          fileurl: URL.createObjectURL(file),
+          name: file.name
+        });
       });
 
       return urls;
     },
     removeFile(index) {
-      this.dropFiles.pop(index);
+      this.images.splice(index, 1);
     },
     sendFiles() {
       let fd = new FormData();
@@ -71,12 +86,10 @@ export default {
       })
         .then(response => {
           console.log(response);
-          return response.blob();
-        })
-        .then(data => {
-          console.log(data);
-          this.dropFiles.push(data);
-          // downloadjs.downloadBlob("", data);
+          let filename = response.headers.get("filename");
+          this.dropFiles[0] = new File([response.data], filename);
+          console.log(this.dropFiles[0].name);
+          return response.blob(), response.headers.get("filename");
         })
         .catch(error => console.log(error));
     }
