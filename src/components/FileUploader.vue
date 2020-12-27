@@ -62,80 +62,40 @@ export default {
           fileurl: URL.createObjectURL(file),
           file: file,
           name: file.name,
-          loading: false
+          loading: false,
+          processed: false
         });
       });
-    },
-    createUrls() {
-      let urls = [];
-      this.dropFiles.forEach(file => {
-        urls.push({
-          fileurl: URL.createObjectURL(file),
-          name: file.name
-        });
-      });
-
-      return urls;
     },
     removeFile(index) {
       this.images.splice(index, 1);
-    },
-    async sendFiles() {
-      let fd;
-
-      // loop over images and send request for every one of them
-      let index = 0;
-      for (var elem of this.images) {
-        fd = new FormData();
-        fd.append("file", elem.file);
-        elem.loading = true;
-
-        fetch("http://127.0.0.1:5000/transform", {
-          method: "POST",
-          headers: {
-            Origin: "" // set our origin here, so only this app is allowed
-          },
-          body: fd
-        })
-          .then(response => response.blob())
-          .then(blobData => {
-            // replace images at index 0 with new image
-            this.$set(this.images, index, {
-              fileurl: URL.createObjectURL(blobData),
-              file: blobData,
-              name: "Processed: " + elem.name,
-              loading: false
-            });
-          })
-          .catch(error => console.log(error));
-
-        index++;
-      }
     },
 
     async sendFiles3() {
       Promise.all(
         this.images.map((elem, index) => {
-          let fd = new FormData();
-          fd.append("file", elem.file);
+          if (elem.processed == false) {
+            let fd = new FormData();
+            fd.append("file", elem.file);
 
-          return fetch("http://127.0.0.1:5000/transform", {
-            method: "POST",
-            headers: {
-              Origin: "" // set our origin here, so only this app is allowed
-            },
-            body: fd
-          })
-            .then(response => response.blob())
-            .then(blobData => {
-              // replace images at index 0 with new image
-              this.$set(this.images, index, {
-                fileurl: URL.createObjectURL(blobData),
-                file: blobData,
-                name: "Processed: " + elem.name
-              });
+            return fetch("http://127.0.0.1:5000/transform", {
+              method: "POST",
+              headers: {
+                Origin: "" // set our origin here, so only this app is allowed
+              },
+              body: fd
             })
-            .catch(error => console.log(error));
+              .then(response => response.blob())
+              .then(blobData => {
+                // replace images at index 0 with new image
+                this.$set(this.images, index, {
+                  fileurl: URL.createObjectURL(blobData),
+                  file: blobData,
+                  name: "Processed: " + elem.name
+                });
+              })
+              .catch(error => console.log(error));
+          }
         })
       );
     }
