@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button type="is-primary m-3" @click="sendFiles()">
+    <b-button type="is-primary m-3" @click="sendFiles3()">
       Test sending files
     </b-button>
     <b-field class="is-primary">
@@ -20,6 +20,11 @@
       <div class="column is-one-quarter-desktop">
         <div v-for="(image, index) in images" :key="index" class="">
           <div class="card m-2">
+            <b-loading
+              :is-full-page="false"
+              v-model="image.loading"
+              :can-cancel="true"
+            ></b-loading>
             <div class="card-image">
               <img :src="image.fileurl" class="uploaded-images image" alt="" />
             </div>
@@ -55,7 +60,9 @@ export default {
       files.forEach(file => {
         this.images.push({
           fileurl: URL.createObjectURL(file),
-          name: file.name
+          file: file,
+          name: file.name,
+          loading: true
         });
       });
     },
@@ -73,25 +80,64 @@ export default {
     removeFile(index) {
       this.images.splice(index, 1);
     },
-    sendFiles() {
-      let fd = new FormData();
-      fd.append("file", this.dropFiles[0]);
+    async sendFiles() {
+      let fd;
 
-      fetch("http://127.0.0.1:5000/transform", {
-        method: "POST",
-        headers: {
-          Origin: ""
-        },
-        body: fd
-      })
-        .then(response => {
-          console.log(response);
-          let filename = response.headers.get("filename");
-          this.dropFiles[0] = new File([response.data], filename);
-          console.log(this.dropFiles[0].name);
-          return response.blob(), response.headers.get("filename");
+      // loop over images and send request for every one of them
+      let index = 0;
+      for (var elem of this.images) {
+        fd = new FormData();
+        fd.append("file", elem.file);
+        elem.loading = true;
+
+        fetch("http://127.0.0.1:5000/transform", {
+          method: "POST",
+          headers: {
+            Origin: "" // set our origin here, so only this app is allowed
+          },
+          body: fd
         })
-        .catch(error => console.log(error));
+          .then(response => response.blob())
+          .then(blobData => {
+            // replace images at index 0 with new image
+            this.$set(this.images, index, {
+              fileurl: URL.createObjectURL(blobData),
+              file: blobData,
+              name: "Processed: " + elem.name,
+              loading: false
+            });
+          })
+          .catch(error => console.log(error));
+
+        index++;
+      }
+    },
+
+    async sendFiles3() {
+      Promise.all(
+        this.images.map((elem, index) => {
+          let fd = new FormData();
+          fd.append("file", elem.file);
+
+          return fetch("http://127.0.0.1:5000/transform", {
+            method: "POST",
+            headers: {
+              Origin: "" // set our origin here, so only this app is allowed
+            },
+            body: fd
+          })
+            .then(response => response.blob())
+            .then(blobData => {
+              // replace images at index 0 with new image
+              this.$set(this.images, index, {
+                fileurl: URL.createObjectURL(blobData),
+                file: blobData,
+                name: "Processed: " + elem.name
+              });
+            })
+            .catch(error => console.log(error));
+        })
+      );
     }
   }
 };
