@@ -87,11 +87,44 @@ export default {
             })
               .then(response => response.blob())
               .then(blobData => {
+                console.log(blobData);
+                // replace images at index 0 with new image
+                this.$set(this.images, index, {
+                  fileurl: URL.createObjectURL(blobData),
+                  file: new File([blobData], elem.name),
+                  name: "Processed: " + elem.name,
+                  processed: true
+                });
+              })
+              .catch(error => console.log(error));
+          }
+        })
+      );
+    },
+    async sendFiles4() {
+      Promise.all(
+        this.images.map((elem, index) => {
+          if (elem.processed == false) {
+            let fd = new FormData();
+            fd.append("file", elem.file);
+
+            return fetch("http://127.0.0.1:5000/transform", {
+              method: "POST",
+              headers: {
+                Origin: "" // set our origin here, so only this app is allowed
+              },
+              body: fd
+            })
+              .then(response => response.json())
+              .then(jsonData => {
+                console.log(jsonData);
+                let blobData = jsonData.file.blob();
                 // replace images at index 0 with new image
                 this.$set(this.images, index, {
                   fileurl: URL.createObjectURL(blobData),
                   file: blobData,
-                  name: "Processed: " + elem.name
+                  name: "Processed: " + elem.name,
+                  processed: true
                 });
               })
               .catch(error => console.log(error));
