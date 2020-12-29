@@ -1,10 +1,7 @@
 <template>
   <div>
-    <b-button type="is-primary m-3" @click="sendFiles3()">
-      Test sending files
-    </b-button>
     <b-field class="is-primary">
-      <b-upload multiple drag-drop @input="newFiles" native>
+      <b-upload multiple drag-drop @input="newFiles" native expanded>
         <section class="section is-primary">
           <div class="content has-text-centered is-primary">
             <p>
@@ -16,10 +13,52 @@
         </section>
       </b-upload>
     </b-field>
+
+    <b-button
+      type="is-primary"
+      @click="sendFiles3()"
+      icon-right="send"
+      expanded
+    >
+      Process current images
+    </b-button>
+
+    <!-- Image Area -->
+    <!-- TODO: Split into component -->
+    <div class="row columns is-multiline">
+      <div
+        v-for="(image, index) in images"
+        :key="index"
+        class="column is-4 zoom-container"
+      >
+        <div class="card large image-card">
+          <b-loading
+            :is-full-page="false"
+            v-model="image.loading"
+            :can-cancel="true"
+          ></b-loading>
+          <b-button
+            type="is-danger"
+            class="delete-button tag is-small"
+            icon-right="delete"
+            @click="removeFile(index)"
+          />
+          <div class="card-image">
+            <figure class="image is-16by9 ">
+              <img :src="image.fileurl" alt="Image" />
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Area (End) -->
+
+    <!--
     <div class="columns is-multiline">
-      <div class="column is-one-quarter-desktop">
+      <div class="">
         <div v-for="(image, index) in images" :key="index" class="">
-          <div class="card m-2">
+          <div class="card column is-one-quarter-desktop is-half-tablet">
             <b-loading
               :is-full-page="false"
               v-model="image.loading"
@@ -28,10 +67,10 @@
             <div class="card-image">
               <img :src="image.fileurl" class="uploaded-images image" alt="" />
             </div>
-            <div class="card-content is-overlay is-clipped image-area">
+            <div class="card-content is-overlay is-clipped button-area">
               <b-button
                 type="is-danger"
-                class="image-tag"
+                class="delete-button"
                 icon-right="delete"
                 @click="removeFile(index)"
               />
@@ -43,6 +82,7 @@
         </div>
       </div>
     </div>
+    -->
   </div>
 </template>
 
@@ -74,7 +114,7 @@ export default {
     async sendFiles3() {
       Promise.all(
         this.images.map((elem, index) => {
-          if (elem.processed == false) {
+          if (!(elem.processed == false || elem.loading == true)) {
             let fd = new FormData();
             fd.append("file", elem.file);
 
@@ -107,6 +147,7 @@ export default {
           if (elem.processed == false) {
             let fd = new FormData();
             fd.append("file", elem.file);
+            elem.loading = true;
 
             return fetch("http://127.0.0.1:5000/transform", {
               method: "POST",
@@ -124,7 +165,8 @@ export default {
                   fileurl: URL.createObjectURL(blobData),
                   file: blobData,
                   name: "Processed: " + elem.name,
-                  processed: true
+                  processed: true,
+                  loading: false
                 });
               })
               .catch(error => console.log(error));
@@ -137,23 +179,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.uploaded-images {
+img {
   object-fit: cover;
 }
 
-.image-area {
+.image-card {
+  .delete-button {
+    transition: 0.1s ease-in-out;
+    left: 1rem;
+    top: 1rem;
+    position: absolute;
+    z-index: 999;
+    opacity: 0;
+  }
+
   &:hover {
-    .image-tag {
+    .delete-button {
       opacity: 1;
     }
   }
-}
-.image-tag {
-  opacity: 0;
-  transition: 0.2s ease-in-out;
-  /* adds this button to the top left corner*/
-  position: absolute;
-  left: 2vw;
-  top: 2vw;
 }
 </style>

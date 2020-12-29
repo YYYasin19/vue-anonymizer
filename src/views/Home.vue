@@ -3,13 +3,8 @@
     <img alt="Vue logo" src="../assets/logo.png" />
     <div class="container">
       <div class="columns">
-        <div class="column is-three-quarters">
-          <FileUploader class="box"></FileUploader>
-        </div>
         <div class="column">
-          <div class="box">
-            <div class="text">Here is the other column</div>
-          </div>
+          <FileUploader class="m-3"></FileUploader>
         </div>
       </div>
     </div>
