@@ -114,10 +114,15 @@ export default {
     async sendFiles3() {
       Promise.all(
         this.images.map((elem, index) => {
-          if (!(elem.processed == false || elem.loading == true)) {
+          if (elem.processed == false && elem.loading == false) {
+            // create form data
             let fd = new FormData();
             fd.append("file", elem.file);
 
+            // set current state to "loading" --> user feedback
+            elem.loading = true;
+
+            // return a promise that consists of the transformation request
             return fetch("http://127.0.0.1:5000/transform", {
               method: "POST",
               headers: {
