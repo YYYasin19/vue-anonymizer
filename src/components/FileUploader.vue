@@ -25,7 +25,7 @@
 
     <!-- Image Area -->
     <!-- TODO: Split into component -->
-    <div class="row columns is-multiline">
+    <div class="row columns is-multiline my-1">
       <div
         v-for="(image, index) in images"
         :key="index"
