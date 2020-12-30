@@ -132,7 +132,9 @@ export default {
             elem.loading = true;
 
             // return a promise that consists of the transformation request
-            return fetch("http://127.0.0.1:5000/transform", {
+            //let url = "https://agile-falls-77440.herokuapp.com/transform";
+            let url = "http://127.0.0.1:5000/transform";
+            return fetch(url, {
               method: "POST",
               headers: {
                 Origin: "" // set our origin here, so only this app is allowed
@@ -142,7 +144,8 @@ export default {
               .then(response => response.blob())
               .then(blobData => {
                 console.log(blobData);
-                // replace images at index 0 with new image
+
+                // set the response as our image
                 this.$set(this.images, index, {
                   fileurl: URL.createObjectURL(blobData),
                   file: new File([blobData], elem.name),
@@ -150,21 +153,33 @@ export default {
                   processed: true,
                   loading: false
                 });
+                setTimeout(console.log("Next"), 10);
               })
               .catch(error => {
-                this.$buefy.notification.open({
-                  message: `There was an error and the image ${elem.name} could not be processed.`,
-                  position: "is-bottom-right",
-                  type: "is-danger",
-                  hasIcon: true,
-                  duration: 2000
-                });
+                this.showErrorNotification(
+                  `There was an error and the image ${elem.name} could not be processed.`
+                );
                 elem.loading = false;
                 console.log(error);
               });
           }
         })
       );
+    },
+    async showErrorNotification(
+      msg,
+      position = "is-bottom-right",
+      type = "is-danger",
+      hasIcon = true,
+      duration = 2000
+    ) {
+      this.$buefy.notification.open({
+        message: msg,
+        position: position,
+        type: type,
+        hasIcon: hasIcon,
+        duration: duration
+      });
     },
     async sendFiles4() {
       Promise.all(
