@@ -1,11 +1,8 @@
-# vue-anonymizer
-
-## Background
-This project is part of a learning-plan in developing web applications using modern frameworks, such as Vue.JS.
+# Vue Anonymizer
+This project is part of my learning-path in developing front-end web applications with modern frameworks, such as Vue.JS.
 
 ## Quick showcase
 ![](src/assets/demo.gif)
-
 
 ## Features and To-Dos
 These are current features I am trying to add / implement:
@@ -15,6 +12,13 @@ These are current features I am trying to add / implement:
 
 ⚠️Application-wide state store with Vuex
 ⚠️Settings: which things to detect or which algorithm should be used
+
+## Made using
+
+<div float="left">
+  <img src="https://vuejs.org/images/logo.png" height="100vh">
+  <img src="https://buefy.org/static/img/buefy.1d65c18.png" height="100vh">
+</div>
 
 ## Project setup
 ```
