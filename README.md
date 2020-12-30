@@ -6,12 +6,13 @@ This project is part of my learning-path in developing front-end web application
 
 ## Features and To-Dos
 These are current features I am trying to add / implement:
-✅Drag-and-Drop upload of images  
-✅Multi-image processing  
-✅User-feedback, e.g. loading icon, error notifications, picture removal  
 
-⚠️Application-wide state store with Vuex
-⚠️Settings: which things to detect or which algorithm should be used
+✅ Drag-and-Drop upload of images  
+✅ Multi-image processing  
+✅ User-feedback, e.g. loading icon, error notifications, picture removal  
+
+⚠️ Application-wide state store with Vuex  
+⚠️ Settings: which things to detect or which algorithm should be used  
 
 ## Made using
 
