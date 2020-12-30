@@ -11,7 +11,7 @@
 <style lang="scss">
 @import "node_modules/bulma/sass/utilities/_all.sass";
 
-$primary: $blue;
+$primary: #349cf4;
 $primary-light: findLightColor($primary);
 $primary-dark: findDarkColor($primary);
 $primary-invert: findColorInvert($primary);

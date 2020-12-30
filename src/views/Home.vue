@@ -30,3 +30,9 @@ export default {
   computed: {}
 };
 </script>
+
+<style lang="scss" scoped>
+img {
+  width: 30%;
+}
+</style>

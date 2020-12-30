@@ -48,6 +48,11 @@
               <img :src="image.fileurl" alt="Image" />
             </figure>
           </div>
+          <div class="card-content is-overlay is-clipped filename-tag">
+            <span class="tag is-primary filename-tag-text">
+              {{ image.name }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -114,7 +119,11 @@ export default {
     async sendFiles3() {
       Promise.all(
         this.images.map((elem, index) => {
-          if (elem.processed == false && elem.loading == false) {
+          if (
+            elem.processed == false &&
+            elem.loading != null &&
+            elem.loading == false
+          ) {
             // create form data
             let fd = new FormData();
             fd.append("file", elem.file);
@@ -138,10 +147,21 @@ export default {
                   fileurl: URL.createObjectURL(blobData),
                   file: new File([blobData], elem.name),
                   name: "Processed: " + elem.name,
-                  processed: true
+                  processed: true,
+                  loading: false
                 });
               })
-              .catch(error => console.log(error));
+              .catch(error => {
+                this.$buefy.notification.open({
+                  message: `There was an error and the image ${elem.name} could not be processed.`,
+                  position: "is-bottom-right",
+                  type: "is-danger",
+                  hasIcon: true,
+                  duration: 2000
+                });
+                elem.loading = false;
+                console.log(error);
+              });
           }
         })
       );
@@ -202,6 +222,20 @@ img {
     .delete-button {
       opacity: 1;
     }
+  }
+}
+
+.filename-tag {
+  opacity: 0;
+  transition: 0.1s ease-in-out;
+  &:hover {
+    opacity: 1;
+  }
+
+  .filename-tag-text {
+    top: 1rem;
+    position: absolute;
+    left: 3rem;
   }
 }
 </style>
