@@ -4,7 +4,7 @@
 This project is part of a learning-plan in developing web applications using modern frameworks, such as Vue.JS.
 
 ## Quick showcase
-[](./src/assets/demo.gif)
+![](src/assets/demo.gif)
 
 
 ## Features and To-Dos
